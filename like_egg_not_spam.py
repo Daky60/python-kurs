@@ -1,10 +1,7 @@
 
 
 
-
-test = first_string, second_string, third_string = "Jag tYcker om äGg", "inte", "SPAM"
-
-print(str(test).split())
+full_sentence = first_string, second_string, third_string = "Jag tYcker om äGg", "inte", "SPAM"
 
 ### V1
 split_first_string = first_string.title().swapcase().rsplit(" ", 2)
@@ -29,3 +26,7 @@ print(convert_to_string)
 ### V3
 initial_list = ((f"{first_string} {second_string} ").title().swapcase() + third_string).split()
 print(' '.join([initial_list[i] for i in [0,1,4,2,5]]))
+
+
+### V4
+

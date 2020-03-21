@@ -1,1 +1,2 @@
 # automatic-lamp
+# Sebastian Frödin
