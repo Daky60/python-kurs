@@ -31,6 +31,7 @@ print(cars, cars_2, cars_3)                     ## returns all 3 lists
 cars += cars                                    ## duplicates all items in list
 print(sorted(set(cars), reverse=True))          ## Sorted in reverse alphabetical order and removes all duplicates
 
+
 searchbase = []
 for i in range(3):
     print("Enter name: ")
@@ -42,11 +43,34 @@ for i in range(3):
     person = dict({'Name': name, 'Age': age, 'Size': size})
     searchbase.append(person)
 
+## Find oldest person
+oldest_person = max(list(map(lambda x: x['Age'], searchbase)))
+find_old_person = list(map(lambda x: oldest_person in x['Age'], searchbase))
+find_old_person_index = find_old_person.index(True)
+print(f"The oldest person is {searchbase[find_old_person_index]['Name']} who has shoe size {searchbase[find_old_person_index]['Size']}")
 
-print(searchbase)
+## Find median shoesized person
+median_sized_person = sorted(list(map(lambda x: x['Size'], searchbase)))[len(searchbase)//2]
+find_median_sized_person = list(map(lambda x: median_sized_person in x['Size'], searchbase))
+find_median_sized_person_index = find_median_sized_person.index(True)
+print(f"The person with median sho size is {searchbase[find_median_sized_person_index]['Name']} who is {searchbase[find_median_sized_person_index]['Age']} years old")
+
+
+## Find any person
 print("Please enter search value, name, age or size followed by value: ")
-pull_info = input()
+pull_info = input().title()
 pull_info = pull_info.split()
-for i in searchbase:
-    if (pull_info[1].title()) in i[pull_info[0].title()]:
-        print(f"Name: {i['Name']}\nAge: {i['Age']}\nSize: {i['Size']}")
+find_requested_person = list(map(lambda x: pull_info[1] in x[pull_info[0]], searchbase))
+find_requested_index = find_requested_person.index(True)
+print(f"Name: {searchbase[find_requested_index]['Name']}\nAge: {searchbase[find_requested_index]['Age']}\nSize: {searchbase[find_requested_index]['Size']}")
+
+
+
+
+## Easy version
+#print("Please enter search value, name, age or size followed by value: ")
+#pull_info = input()
+#pull_info = pull_info.split()
+#for i in searchbase:
+#    if (pull_info[1].title()) in i[pull_info[0].title()]:
+#        print(f"Name: {i['Name']}\nAge: {i['Age']}\nSize: {i['Size']}")
