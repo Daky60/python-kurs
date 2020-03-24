@@ -43,16 +43,17 @@ for i in range(3):
     person = dict({'Name': name, 'Age': age, 'Size': size})
     searchbase.append(person)
 
+print(searchbase)
 ## Find oldest person
-oldest_person = max(list(map(lambda x: x['Age'], searchbase)))
-find_old_person = list(map(lambda x: oldest_person in x['Age'], searchbase))
-find_old_person_index = find_old_person.index(True)
+oldest_person = max(map(lambda x: x['Age'], searchbase))
+find_old_person = map(lambda x: oldest_person in x['Age'], searchbase)
+find_old_person_index = list(find_old_person).index(True)
 print(f"The oldest person is {searchbase[find_old_person_index]['Name']} who has shoe size {searchbase[find_old_person_index]['Size']}")
 
 ## Find median shoesized person
-median_sized_person = sorted(list(map(lambda x: x['Size'], searchbase)))[len(searchbase)//2]
-find_median_sized_person = list(map(lambda x: median_sized_person in x['Size'], searchbase))
-find_median_sized_person_index = find_median_sized_person.index(True)
+median_sized_person = sorted(map(lambda x: x['Size'], searchbase))[len(searchbase)//2]
+find_median_sized_person = map(lambda x: median_sized_person in x['Size'], searchbase)
+find_median_sized_person_index = list(find_median_sized_person).index(True)
 print(f"The person with median sho size is {searchbase[find_median_sized_person_index]['Name']} who is {searchbase[find_median_sized_person_index]['Age']} years old")
 
 
@@ -60,8 +61,8 @@ print(f"The person with median sho size is {searchbase[find_median_sized_person_
 print("Please enter search value, name, age or size followed by value: ")
 pull_info = input().title()
 pull_info = pull_info.split()
-find_requested_person = list(map(lambda x: pull_info[1] in x[pull_info[0]], searchbase))
-find_requested_index = find_requested_person.index(True)
+find_requested_person = map(lambda x: pull_info[1] in x[pull_info[0]], searchbase)
+find_requested_index = list(find_requested_person).index(True)
 print(f"Name: {searchbase[find_requested_index]['Name']}\nAge: {searchbase[find_requested_index]['Age']}\nSize: {searchbase[find_requested_index]['Size']}")
 
 
