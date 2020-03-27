@@ -58,19 +58,17 @@ for i in range(requested_fruits):
 print(my_basket)
 
 #t = [fruits[i] for i in range(requested_fruits)]
-
+ 
 
 #find prime numbers
 start = 2
 finish = 100
 while start < finish:
-    control = False
     i = 2
     while i < start//2:
         if start % i == 0:
-            control = True
             break
         i += 1
-    if not control:
-        print(start)    
+    else:
+        print(start, end=" ")
     start += 1
