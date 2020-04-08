@@ -31,13 +31,17 @@ class library:
                 print(new_title, 'is taken')
         else:
             print(old_title.title(), 'doesnt exist')
-    ## changes value of header by searched title
-    def set_value(self, header):
+    ## changes a games' property of choice
+    def change_property(self):
         keyword = input('Title: ').lower()
         if keyword in self.df.title.values:
-            value = input(f'New {header}: ')
-            self.df.loc[self.df.title == keyword, header] = value
-            print(f'{header.title()} changed to {value}')
+            header = input('Do you want to change players, timelapse or age? ')
+            if header in ('players', 'timelapse', 'age'):
+                value = input(f'New {header.title()}: ')
+                self.df.loc[self.df.title == keyword, header] = value
+                print(f'{header.title()} changed to {value}')
+            else:
+                print('invalid input')
         else:
             print(old_title.title(), 'doesnt exist')
     ## exports df to file
@@ -49,13 +53,14 @@ def menu_options():
     print("""Choose alternative by number
 1. Add game
 2. Change game title
-3. Change player amount
-4. Change timelapse
-5. Change age
+3. Change game properties
 0. Exit
 """, end="Input: ")
     pick = int(input())
     return pick
+
+
+
 
 def menu_handler(library):
     pick = None
@@ -63,14 +68,10 @@ def menu_handler(library):
         pick = menu_options()
         if pick == 1:
             library.add_game()
-        if pick == 2:
+        elif pick == 2:
             library.change_title()
-        if pick == 3:
-            library.set_value('players')
-        if pick == 4:
-            library.set_value('timelapse')
-        if pick == 5:
-            library.set_value('age')
+        elif pick == 3:
+            library.change_property()
         if pick != 0:
             input("Press any key to continue...")
     library.export_df()
