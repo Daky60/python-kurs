@@ -1,9 +1,12 @@
 import pandas as pd
 
-
 ## file which to write data to, file is created if it doesn't exist
 library_file = 'out.csv'
+testing = True
 
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
 
 class library:
     def __init__(self, file):
@@ -64,6 +67,15 @@ class library:
                 print('invalid input')
         else:
             print(keyword.title(), 'doesnt exist')
+    def add_random_games(self):
+        import random
+        import string
+        alphabet = string.ascii_lowercase
+        for i in range(random.randrange(30, 100)):
+            title = ''.join(random.choice(alphabet) for i in range(random.randrange(5, 12)))
+            players, duration, age = random.randrange(1, 12), random.randrange(20, 1440), random.randrange(18)
+            if title not in self.df.title.values:
+                self.df = self.df.append([{'title': title, 'players': players, 'duration': duration, 'age': age}], ignore_index=True)
     ## exports df to file
     def export_df(self):
         self.df.to_csv(self.file, sep=';', encoding='UTF-8', index=False, header=None)
@@ -86,6 +98,8 @@ def menu_options():
 
 
 def menu_handler(library):
+    if testing:
+        library.add_random_games()
     pick = None
     while pick != 0:
         pick = menu_options()
