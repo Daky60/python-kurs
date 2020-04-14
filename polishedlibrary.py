@@ -11,34 +11,32 @@ pd.set_option('display.max_columns', None)
 class library:
     def __init__(self, file):
         self.file = file
-        self.columns = ['name', 'players', 'duration', 'age']
+        ## First element is assumed to be an unique identifier throughout the code
+        self.columns = ['Title', 'Players', 'Duration', 'Age'] ## Add or remove any column seamlessly
         self.df = pd.read_csv(self.file, sep=';', encoding='UTF-8', names=self.columns)
-    ## Adds game to df
-    def insert_game(self, id, one, two, three):
-        self.df = self.df.append([{self.columns[0]: id, self.columns[1]: one, self.columns[2]: two, self.columns[3]: three}], ignore_index=True)
-    ## Handles input for insert_game
+    ## Adds game
     def add_game(self):
-        identifier = input(f'Enter {self.columns[0].title()}: ').lower()
-        print(identifier)
-        if identifier not in self.df[self.columns[0]].values:
+        result = list()
+        result.append(input(f'Enter {self.columns[0]}: ').title())
+        if result[0] not in self.df[self.columns[0]].values:
             try:
-                one = int(input(f'Enter {self.columns[1].title()}: '))
-                two = int(input(f'Enter {self.columns[2].title()}: '))
-                three = int(input(f'Enter {self.columns[3].title()}: '))
-                self.insert_game(identifier, one, two, three)
-                print(identifier.title(), 'added to library')
+                for i in range(len(self.columns[1:])):
+                    result.append(int(input(f'Enter {self.columns[i+1]}: ')))
+                temp = pd.DataFrame([result], columns=self.columns)
+                self.df = self.df.append(temp, ignore_index=True)
+                print(result[0].title(), 'added to library')
             except:
                 print('Something went wrong')
         else:
-            print(identifier.title(), 'already exists')
+            print(result[0].title(), 'already exists')
     ## Search for a game
     def search_game(self, pool=None):
         if pool is None:
             pool = self.df
-        header = input(f'Do you want to search by {", ".join(self.columns[:-1])} or {self.columns[-1]}?: ').lower()
+        header = input(f'Do you want to search by {", ".join(self.columns[:-1]).lower()} or {self.columns[-1].lower()}?: ').title()
         if header in self.columns:
             if header == self.columns[0]:
-                keyword = input(f'search for partial or full {self.columns[0]}: ').lower()
+                keyword = input(f'search for partial or full {self.columns[0].lower()}: ').title()
                 results = pool[pool[header].str.startswith(keyword, na=False)]
             else:
                 try:
@@ -55,15 +53,15 @@ class library:
             print('Invalid input')
     ## changes property of selected game
     def change_property(self):
-        identifier = input(f'Enter {self.columns[0].title()}: ').lower()
+        identifier = input(f'Enter {self.columns[0].title()}: ').title()
         if identifier in self.df[self.columns[0]].values:
-            header = input(f'Do you want to change {", ".join(self.columns[:-1])} or {self.columns[-1]}?: ').lower()
+            header = input(f'Do you want to change {", ".join(self.columns[:-1])} or {self.columns[-1]}?: ').title()
             if header in self.columns:
-                value = input(f'New {header}: ').lower()
+                value = input(f'New {header}: ')
                 if header == self.columns[0]:
                     if value not in self.df[self.columns[0]].values:
-                        self.df[self.columns[0]] = self.df[self.columns[0]].replace(identifier, value)
-                        print(f'{header.title()} changed to {value}')
+                        self.df[self.columns[0]] = self.df[self.columns[0]].replace(identifier, value.title())
+                        print(f'{header.title()} changed to {value.title()}')
                     else:
                         print(value, 'is taken')
                 else:
@@ -76,14 +74,6 @@ class library:
                 print('invalid input')
         else:
             print(identifier.title(), 'doesnt exist')
-    def add_random_games(self):
-        import random
-        alphabet = 'abcdefghijklmnopqrstuvwxyzåäö'
-        for i in range(random.randrange(30, 100)):
-            identifier = ''.join(random.choice(alphabet) for i in range(random.randrange(5, 12)))
-            one, two, three = random.randrange(1, 12), random.randrange(20, 1440), random.randrange(18)
-            if identifier not in self.df[self.columns[0]].values:
-                self.insert_game(identifier, one, two, three)
     ## exports df to file
     def export_df(self):
         self.df.to_csv(self.file, sep=';', encoding='UTF-8', index=False, header=None)
@@ -94,7 +84,7 @@ def menu_options():
 1. Add game
 2. Edit game
 3. Find game
-9. Display all games
+4. Display all games
 0. Exit
 """, end="Input: ")
     try:
@@ -106,8 +96,6 @@ def menu_options():
 
 
 def menu_handler(library):
-    if testing:
-        library.add_random_games()
     pick = None
     pick_sub = None
     while pick != 0:
@@ -125,7 +113,7 @@ def menu_handler(library):
             except:
                 pass
             pick_sub = None
-        elif pick == 9:
+        elif pick == 4:
             print(library.df)
         if pick != 0 and not pick_sub:
             input("Press any key to continue...")
