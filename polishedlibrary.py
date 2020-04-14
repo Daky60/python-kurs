@@ -14,6 +14,9 @@ class library:
         self.columns = ['name', 'players', 'duration', 'age']
         self.df = pd.read_csv(self.file, sep=';', encoding='UTF-8', names=self.columns)
     ## Adds game to df
+    def insert_game(self, id, one, two, three):
+        self.df = self.df.append([{self.columns[0]: id, self.columns[1]: one, self.columns[2]: two, self.columns[3]: three}], ignore_index=True)
+    ## Handles input for insert_game
     def add_game(self):
         identifier = input(f'Enter {self.columns[0].title()}: ').lower()
         print(identifier)
@@ -22,7 +25,7 @@ class library:
                 one = int(input(f'Enter {self.columns[1].title()}: '))
                 two = int(input(f'Enter {self.columns[2].title()}: '))
                 three = int(input(f'Enter {self.columns[3].title()}: '))
-                self.df = self.df.append([{self.columns[0]: identifier, self.columns[1]: one, self.columns[2]: two, self.columns[3]: three}], ignore_index=True)
+                self.insert_game(identifier, one, two, three)
                 print(identifier.title(), 'added to library')
             except:
                 print('Something went wrong')
@@ -80,7 +83,7 @@ class library:
             identifier = ''.join(random.choice(alphabet) for i in range(random.randrange(5, 12)))
             one, two, three = random.randrange(1, 12), random.randrange(20, 1440), random.randrange(18)
             if identifier not in self.df[self.columns[0]].values:
-                self.df = self.df.append([{self.columns[0]: identifier, self.columns[1]: one, self.columns[2]: two, self.columns[3]: three}], ignore_index=True)
+                self.insert_game(identifier, one, two, three)
     ## exports df to file
     def export_df(self):
         self.df.to_csv(self.file, sep=';', encoding='UTF-8', index=False, header=None)
