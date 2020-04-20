@@ -57,7 +57,7 @@ class library:
         if header in self.columns:
             ## Search for title (unique)
             if header == self.columns[0]:
-                keyword = input(f'search for partial or full {self.columns[0].lower()}: ').title()
+                keyword = input(f'Search for partial or full {self.columns[0].lower()}: ').title()
                 results = pool[pool[header].str.startswith(keyword, na=False)]
             ## Searches for value from keyword
             else:
@@ -68,6 +68,7 @@ class library:
                     print('Invalid input')
             ## Return search results if 1 or more
             if len(results) > 0:
+                results = results.sort_values(by=header)
                 print(results)
                 return results
             else:
@@ -75,11 +76,14 @@ class library:
         else:
             print('Invalid input')
     ## changes property of selected game
-    def change_property(self):
-        identifier = input(f'Enter {self.columns[0].title()}: ').title()
+    def change_property(self, edit=None):
+        if edit is None:
+            identifier = input(f'Enter {self.columns[0].title()}: ').title()
+        else:
+            identifier = edit
         ## Search for title
         if identifier in self.df[self.columns[0]].values:
-            header = input(f'Do you want to change {", ".join(self.columns).lower()} or delete?: ').title()
+            header = input(f'Do you want to change {", ".join(self.columns).lower()} or delete game?: ').title()
             ## Check if input matches an existing column
             if header in self.columns:
                 value = input(f'New {header}: ')
@@ -144,8 +148,12 @@ def menu_handler(library):
             ## Saves search results to results var so you can continue filtering
             try:
                 results = library.search_game()
-                while (len(results) > 1 and input('Press 0 to exit or 1 to continue searching: ') != str(0)):
+                while (len(results) > 1 and input('Press 1 to continue search or 0 to exit: ') != str(0)):
                     results = library.search_game(results)
+                    ## If only 1 result, give choice to edit game
+                if len(results) == 1 and input('Press 1 to edit game or 0 to exit: ') != str(0):
+                    selected = results.iloc[0][library.columns[0]]
+                    library.change_property(selected)
             except:
                 pass
         elif pick == 4:
@@ -157,6 +165,7 @@ def menu_handler(library):
 ## create lib_file if it doesn't exist
 with open(lib_file, 'a') as f:
     pass
+
 
 
 ## Calls menu_handler which in return calls everything else
