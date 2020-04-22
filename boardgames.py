@@ -15,13 +15,14 @@ class library:
     def __init__(self, file, columns):
         self.file = file
         self.columns = columns
+        self.id = columns[0]
         self.df = pd.read_csv(self.file, sep=';', names=self.columns)
     ## Adds game
     def add_game(self):
         result = list()
-        result.append(input(f'Enter {self.columns[0]}: ').title())
+        result.append(input(f'Enter {self.id}: ').title())
         ## Check so title doesn't already exist
-        if result[0] not in self.df[self.columns[0]].values:
+        if result[0] not in self.df[self.id].values:
             ## Loop through self.columns, ask for input value, creates a seperate df(temp) and merges it to self.df
             try:
                 for i in self.columns[1:]:
@@ -36,11 +37,10 @@ class library:
     ## Adds a bunch of random games for testing purposes
     def add_random_games(self):
         import random
-        alphabet = 'abcdefghijklmnopqrstuvwxyzåäö'
         for i in range(100):
             result = list()
-            identifier = ''.join(random.choice(alphabet) for i in range(random.randrange(5, 15))).title()
-            if identifier not in self.df[self.columns[0]].values:
+            identifier = random.choice('aeiouy').join(random.choice('bcdfghjklmnpqrstvwxz') for i in range(random.randrange(3, 5))).title()
+            if identifier not in self.df[self.id].values:
                 result.append(identifier)
                 for i in self.columns[1:]:
                     result.append(random.randrange(1, 1000))
@@ -53,9 +53,9 @@ class library:
             pool = self.df
         header = input(f'Do you want to search by {", ".join(self.columns[:-1]).lower()} or {self.columns[-1].lower()}?: ').title()
         if header in self.columns:
-            ## Search for title (unique)
-            if header == self.columns[0]:
-                keyword = input(f'Search for partial or full {self.columns[0].lower()}: ').title()
+            ## Search by title (unique)
+            if header == self.id:
+                keyword = input(f'Search for partial or full {self.id.lower()}: ').title()
                 results = pool[pool[header].str.startswith(keyword, na=False)]
             ## Searches for value from keyword
             else:
@@ -76,37 +76,37 @@ class library:
     ## changes property of selected game
     def change_property(self, edit=None):
         if edit is None:
-            identifier = input(f'Enter {self.columns[0].title()}: ').title()
+            identifier = input(f'Enter {self.id}: ').title()
         else:
             identifier = edit
         ## Search for title
-        if identifier in self.df[self.columns[0]].values:
+        if identifier in self.df[self.id].values:
             header = input(f'Do you want to change {", ".join(self.columns).lower()} or delete game?: ').title()
             ## Check if input matches an existing column
             if header in self.columns:
                 value = input(f'New {header}: ')
                 ## Change title (unique)
-                if header == self.columns[0]:
-                    if value not in self.df[self.columns[0]].values:
-                        self.df[self.columns[0]] = self.df[self.columns[0]].replace(identifier, value.title())
-                        print(f'{header} changed to {value.title()}')
+                if header == self.id:
+                    if value not in self.df[self.id].values:
+                        self.df[self.id] = self.df[self.id].replace(identifier, value.title())
+                        print(header, 'changed to', value.title())
                     else:
                         print(value, 'is taken')
                 ## Change other values
                 else:
                     try:
-                        self.df.loc[self.df[self.columns[0]] == identifier, header] = int(value)
-                        print(f'{header} changed to {value}')
+                        self.df.loc[self.df[self.id] == identifier, header] = int(value)
+                        print(header, 'changed to', value)
                     except:
-                        print('invalid input')
+                        print('Invalid input')
             ## If input is delete
             elif header == 'Delete':
-                self.df = self.df[self.df[self.columns[0]] != identifier]
+                self.df = self.df[self.df[self.id] != identifier]
                 print(identifier, 'deleted')
             else:
-                print('invalid input')
+                print('Invalid input')
         else:
-            print(identifier, 'doesnt exist')
+            print(identifier, 'doesn\'t exist')
     ## exports df to file
     def export_df(self):
         self.df.to_csv(self.file, sep=';', index=False, header=None)
