@@ -2,17 +2,15 @@
 
 ##############################################################################
 
-lib_file = 'out.csv'                                            ## File to run script against, file is created if it doesn't exist
-columns = ['Title', 'Players', 'Duration', 'Age']               ## Add or remove any column seamlessly, first is assumed to be unique id
-testing = True                                                  ## Adds random games for testing purposes
+lib_file = 'out.csv'                                                        ## File to run script against, file is created if it doesn't exist
+columns = ['Title', 'Players', 'Duration', 'Age']                           ## Add or remove any column seamlessly, first is assumed to be unique id
+testing = True                                                              ## Adds random games for testing purposes
 
 ##############################################################################
 
 
 
 import pandas as pd
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
 class library:
     def __init__(self, file, columns):
         self.file = file
@@ -30,11 +28,11 @@ class library:
                     result.append(int(input(f'Enter {i}: ')))
                 temp = pd.DataFrame([result], columns=self.columns)
                 self.df = self.df.append(temp, ignore_index=True)
-                print(result[0].title(), 'added to library')
+                print(result[0], 'added to library')
             except:
                 print('Something went wrong')
         else:
-            print(result[0].title(), 'already exists')
+            print(result[0], 'already exists')
     ## Adds a bunch of random games for testing purposes
     def add_random_games(self):
         import random
@@ -91,14 +89,14 @@ class library:
                 if header == self.columns[0]:
                     if value not in self.df[self.columns[0]].values:
                         self.df[self.columns[0]] = self.df[self.columns[0]].replace(identifier, value.title())
-                        print(f'{header.title()} changed to {value.title()}')
+                        print(f'{header} changed to {value.title()}')
                     else:
                         print(value, 'is taken')
                 ## Change other values
                 else:
                     try:
                         self.df.loc[self.df[self.columns[0]] == identifier, header] = int(value)
-                        print(f'{header.title()} changed to {value}')
+                        print(f'{header} changed to {value}')
                     except:
                         print('invalid input')
             ## If input is delete
@@ -108,7 +106,7 @@ class library:
             else:
                 print('invalid input')
         else:
-            print(identifier.title(), 'doesnt exist')
+            print(identifier, 'doesnt exist')
     ## exports df to file
     def export_df(self):
         self.df.to_csv(self.file, sep=';', index=False, header=None)
@@ -157,7 +155,7 @@ def menu_handler(library):
             except:
                 pass
         elif pick == 4:
-            print(library.df)
+            print(library.df.to_string())
         if pick != 0:
             input("Press any key to continue...")
     library.export_df()
