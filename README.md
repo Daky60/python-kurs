@@ -1,2 +1,2 @@
-# automatic-lamp
+# python-kurs
 # Sebastian Frödin
