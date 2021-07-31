@@ -1,2 +1,1 @@
 # python-kurs
-# Sebastian Frödin
